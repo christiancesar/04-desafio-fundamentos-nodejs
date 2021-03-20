@@ -17,6 +17,12 @@ class CreateTransactionService {
   }
 
   public execute({ title, value, type }: Request): Transaction {
+    const balance = this.transactionsRepository.getBalance();
+    if (type === 'outcome') {
+      if (value > balance.total) {
+        throw Error('Withdrawal amount greater than available total.');
+      }
+    }
     const transaction = this.transactionsRepository.create({
       title,
       value,

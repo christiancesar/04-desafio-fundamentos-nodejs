@@ -17,8 +17,6 @@ interface CreateTransaction {
 class TransactionsRepository {
   private transactions: Transaction[];
 
-  private balance: Balance;
-
   constructor() {
     this.transactions = [];
   }
@@ -33,23 +31,18 @@ class TransactionsRepository {
         accumulator += currentValue.value;
       }
       return accumulator;
-    });
+    }, 0);
 
     const outcome = this.transactions.reduce((accumulator, currentValue) => {
       if (currentValue.type === 'outcome') {
         accumulator += currentValue.value;
       }
       return accumulator;
-    });
+    }, 0);
 
     const total = income - outcome;
 
-    this.balance = {
-      income,
-      outcome,
-      total,
-    };
-    return this.balance;
+    return { income, outcome, total };
   }
 
   public create({ title, value, type }: CreateTransaction): Transaction {
